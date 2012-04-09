@@ -1,5 +1,7 @@
 Ext.define('RaxaEmr.Registration.view.Viewport', {
-	extend: 'Ext.TabPanel',
+    extend: 'Ext.TabPanel',
+    id: 'raxaEmrViewport',
+    requires: 'RaxaEmr.Registration.view.SearchResults',
 	config: {
 		fullscreen: true,
 		tabBarPosition: 'bottom',
