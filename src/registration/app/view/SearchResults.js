@@ -12,7 +12,7 @@
 //});
 
 Ext.define('RaxaEmr.Registration.view.SearchResults', {
-    extend: 'Ext.form.Panel',
+    extend: 'Ext.Panel',
     id: 'searchPatientsResults',
 
     config: {
@@ -20,17 +20,27 @@ Ext.define('RaxaEmr.Registration.view.SearchResults', {
         iconCls: 'searchResults',
         styleHtmlContent: true,
         // List takes a store and a template
-        items: [{
-            xtype: 'dataview',
-            fullscreen: true,
-            config:
-            {
-                store: Ext.data.StoreManager.lookup('patientStore'),
-                itemTpl: '<div>{lastName}, {firstName}</div>'
-            }
+        storeId: 'patients4321'
+        //        items: [{
+        //            xtype: 'dataview',
+        //            fullscreen: true,
+        //            config:
+        //            {
+        //                store: Ext.data.StoreManager.lookup(this.storeId),
+        //                
+        //            }
+        //        }]
 
+    }//,
 
-    }]
+//    displayResults: function () {
+//        var resultsDataView = Ext.create('Ext.DataView', {
+//            fullscreen: true,
+//            itemTpl: '<div>{lastName}, {firstName}</div>'
+//        });
 
-}
+//        resultsDataView.setStore(Ext.data.StoreManager.lookup(this.storeId));
+//        resultsDataView.show();
+//        this.add(resultsDataView);
+//    }
 });

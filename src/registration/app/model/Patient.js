@@ -3,7 +3,7 @@ Ext.define('RaxaEmr.Registration.model.Patient', {
 	config: {
 		proxy: {
 			type: 'localstorage',
-			id: 'patients'
+// this must be unique			id: 'patients'
 		},
 		fields: [{
 			name: 'registrationNumber',

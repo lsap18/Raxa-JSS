@@ -1,5 +1,6 @@
-var patientStore;
-
+var patientStore;   
+var searchResultsForm;
+var resultsDataView;
 Ext.define('RaxaEmr.Registration.controller.Main', {
     extend: 'Ext.app.Controller',
 
@@ -33,9 +34,11 @@ Ext.define('RaxaEmr.Registration.controller.Main', {
         console.log('initializePatientStore');
         //our Store automatically picks up the LocalStorageProxy defined on the
         //Patient model
+
+        //TODO: provide unique value for storeId
         patientStore = Ext.create('Ext.data.Store', {
             model: 'RaxaEmr.Registration.model.Patient',
-            storeId: 'patientStore'
+            storeId: 'patients4321'
         });
         console.log('store initialized');
     },
@@ -57,7 +60,9 @@ Ext.define('RaxaEmr.Registration.controller.Main', {
     },
 
     printPatientStore: function () {
-        //TODO inviestigaet patientStore.load(); why this doesnt work anymore
+        console.log("loading store...");
+        patientStore.load();
+        console.log("store loaded");
         console.log("# of records in PatientStore = " + patientStore.getCount());
     },
 
@@ -88,20 +93,43 @@ Ext.define('RaxaEmr.Registration.controller.Main', {
         console.log('First name: ' + values.firstName);
         var query = values.firstName;
         /*var rec = patientStore.findRecord('firstName', query);*/
-
-        var nameFilter = new Ext.util.Filter({ property: 'firstName', value: query });
-        //TODO: check number of records in store after filter instead of using returned variable
-        var rec = patientStore.filter(nameFilter);
+        patientStore.clearFilter();
+        var fistNameFilter = new Ext.util.Filter({ property: 'firstName', value: values.firstName });
+        var lastNameFilter = new Ext.util.Filter({ property: 'lastName', value: values.lastName });
+        
+        var rec = patientStore.filter([nameFilter, lastFilter]);
 
         console.log(rec);
         //wasPatientFound = (rec === null) ? "No patient found" : "Patient found";
+        //TODO: check number of records in store after filter instead of using returned variable (which is always null)
         var hasResults = (rec === null) ? false : true;
 
         if (hasResults) {
             var viewport = this.getRaxaEmrViewport();
-            var searchResultsForm = Ext.create('RaxaEmr.Registration.view.SearchResults');
-            viewport.add(searchResultsForm);
-            viewport.setActiveItem(searchResultsForm);
+
+            if (resultsDataView == null) {
+                resultsDataView = Ext.create('Ext.DataView', {
+                    fullscreen: true,
+                    store: patientStore,
+                    title: 'Search Results',
+                    iconCls: 'list',
+                    styleHtmlContent: true,
+                    itemTpl: '<div>{lastName}, {firstName}</div>'
+                });
+                viewport.add(resultsDataView);
+            }
+            //For some reason, couldnt get dataview to display within a panel... 
+            //            if (searchResultsForm == null) {
+            //                searchResultsForm = Ext.create('RaxaEmr.Registration.view.SearchResults', { storeId: 'patients4321' });
+            //                viewport.add(searchResultsForm);
+            //            }
+
+            resultsDataView.setStore(patientStore);
+            //resultsDataView.show();
+
+            if (resultsDataView != null) {
+                viewport.setActiveItem(resultsDataView);
+            }
         }
         else {
             alert("No patients found");
